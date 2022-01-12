@@ -18,6 +18,9 @@ int k;
 bool spelled;
 int a = 1;
 int j = 0;
+
+/* Defining the data type "node" for our linked list. A linked list of composed of nodes, which contain both a String variable and a pointer to the next element
+in the linked list. */
 typedef struct node
 {
     char word[LENGTH + 1];
@@ -31,8 +34,9 @@ const unsigned int N = 676;
 // Hash table
 node *table[N];
 
-// Returns true if word is in dictionary else false
-// Hashes word to a number
+/* Hashing each word according to its first two characters. This hash function will be used on every word in the dictionary in order to organize the words and make 
+it more efficient to search through. This creates 676 total "buckets" into which words can be hashed. The word "cab", for example, would be hashed into to bucket 
+79. The letter "C" is represented by the number 3, and  the letter "A" is represented by the number 1. The number is calculated by taking the result of 26*3+1. */
 unsigned int hash(const char *word)
 {
     strcpy(programmer2, word);
@@ -41,6 +45,7 @@ unsigned int hash(const char *word)
     ASCII2[0] = 0;
     if ((strlen(programmer2)) >= 2)
     {
+        // Making first two characters lowercase
         for (int epicly2 = 0; epicly2 < 2; epicly2++)
         {
             if (65 <= ((int) (programmer2[epicly2])) && ((int) (programmer2[epicly2])) <= 90)
@@ -56,6 +61,8 @@ unsigned int hash(const char *word)
         {
             return 0;
         }
+        
+        // Convert ASCII values of characters from numbers between 97 & 122 to numbers between 1 & 26
         for (int epicly = 0; epicly < 2; epicly++)
         {
             if (epicly == 0)
@@ -69,7 +76,8 @@ unsigned int hash(const char *word)
                 ASCII[epicly] = c2 - 97;
             }
         }
-
+           
+        // Return the result of the calculation
         return 26*ASCII[0] + ASCII[1];
     }
     else
