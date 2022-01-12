@@ -8,3 +8,9 @@ When running the program, run "speller.c", inputing the name of the txt file you
 The files "wells.txt" and "wells key.txt" provide a sample text and key, respectively, to run the program on.
 
 The "dictionary.o" and "dictionary.h" files allow the program to access a dictionary. The "dictionary.c" program was what was actually written by me, and defines the methods "hash", "load", "check", "size", and "unload", which are then called on the "speller.c" program. All the files other than "dictionary.c" were provided to me when I started the assignment.
+
+MakeFile:
+clang -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -c -o speller.o speller.c
+clang -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -c -o dictionary.o dictionary.c
+clang -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -o speller speller.o dictionary.o -lm
+
