@@ -175,7 +175,7 @@ bool load(const char *dictionary)
                 if (tmp -> next == NULL)
                 {
                     tmp -> next = arr[k];
-                    printf("Yes #%i\n!", k);
+                    printf("Word #%i + loaded from dictionary!\n", k);
                     break;
                 }
             }
