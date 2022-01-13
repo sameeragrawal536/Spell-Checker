@@ -98,27 +98,36 @@ unsigned int hash(const char *word)
 // Loads dictionary into memory, returning true if successful else false
 bool load(const char *dictionary)
 {
-    // Ope
+    // Opens file containing the dictionary, or the list of all English words which our program will check the words of the txt file against.
     FILE *ptr1 = fopen("large", "r");
     if (ptr1 == NULL)
     {
         printf("The very first ptr is null.\n");
         return false;
     }
+    
+    //Malloc enough memory for the first node
     node *list = malloc(sizeof(node));
     if (list == NULL)
     {
         printf("The very first malloc is null.\n");
         return false;
     }
+    
+    // Set a char array to the first word of the dictionary
     char wordyay2[45];
     list -> next = NULL;
     fscanf(ptr1, "%s", wordyay2);
+    
+    // Basically counting the number of words in the dicionary and storing it in a variable called j
     while((feof(ptr1)) == 0)
     {
         fscanf(ptr1, "%s", wordyay2);
         j++;
     }
+    
+    /* Creates an array of memory addresses, loads each word from the dictionary file into its own malloc, and stores the memory address to that allocated memory
+    in that array. */
     node *arr[j];
     rewind(ptr1);
     for (k = 0; k < j; k++)
@@ -131,11 +140,15 @@ bool load(const char *dictionary)
         }
         arr[k] = b;
         fscanf(ptr1, "%s", wordyay2);
+        
+        // Assigning each word in the dictionary to one of the nodes
         strcpy((arr[k] -> word), wordyay2);
         arr[k] -> next = NULL;
     }
     list -> next = arr[0];
     k = 0;
+    
+    // Create our hash table with 676 "buckets"
     for (k = 0; k < N; k++)
     {
         table[k] = malloc(sizeof(node));
@@ -143,11 +156,16 @@ bool load(const char *dictionary)
     int as = 0;
     for (k = 0; k < j; k++)
     {
+        // Hash each word in the dictionary
         unsigned int epic = hash(arr[k] -> word);
+        
+        // If this is the first word in this hash "bucket", make the pointer in the hash table point to this word
         if ((table[epic] -> next) == NULL)
         {
             table[epic] -> next = arr[k];
         }
+        
+        // If not, follow the linked list for that hash "bucket" until you reach its end, at which point add the new word and make the previous pointer point to it
         else
         {
             node *tmp = table[epic];
@@ -169,12 +187,19 @@ bool load(const char *dictionary)
 
 bool check(const char *word)
 {
+    // Hash the word we are trying to spell check
     unsigned int programmer = hash(word);
+    
+    // Access the hash "bucket" which this word would have belonged to
     node *tmp2 = table[programmer];
+    
+    
     if (strlen(programmer2) <= 45)
     {
+        // Loop through all the words in the linked list belonging to this specific hash "bucket"
         while (tmp2 -> next != NULL)
         {
+            // Make all letters in the word lowercase
             for (int epicly2006 = 0; epicly2006 < strlen(programmer2); epicly2006++)
             {
                 if (65 <= ((int) (programmer2[epicly2006])) && ((int) (programmer2[epicly2006])) <= 90)
@@ -186,6 +211,8 @@ bool check(const char *word)
                     programmer2[epicly2006] = programmer2[epicly2006];
                 }
             }
+            
+            // To make spell checking slightly more efficient, only check if the word we're checking and the dictionary word we're currently on have the same length
             if (strlen(tmp2 -> word) == strlen(programmer2))
             {
                 if ((strncmp((tmp2 -> word), (programmer2), (strlen(programmer2)))) == 0)
