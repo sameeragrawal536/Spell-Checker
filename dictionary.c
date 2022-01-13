@@ -193,7 +193,7 @@ bool check(const char *word)
     // Access the hash "bucket" which this word would have belonged to
     node *tmp2 = table[programmer];
     
-    
+    // The longest word in the dictionary is 45 characters long, so only check the word if it is less than 45 characters long
     if (strlen(programmer2) <= 45)
     {
         // Loop through all the words in the linked list belonging to this specific hash "bucket"
@@ -215,35 +215,49 @@ bool check(const char *word)
             // To make spell checking slightly more efficient, only check if the word we're checking and the dictionary word we're currently on have the same length
             if (strlen(tmp2 -> word) == strlen(programmer2))
             {
+                // If the words match, we are done checking this word
                 if ((strncmp((tmp2 -> word), (programmer2), (strlen(programmer2)))) == 0)
                 {
                     spelled = true;
                     break;
                 }
+                
+                // If the words do not match, go to the next dictionary word in this hash "bucket"
                 else
                 {
                     tmp2 = tmp2 -> next;
                 }
             }
+            
+            // If the lengths of the words aren't the same, we move on to the next dictionary word in this hash "bucket" without even comparing.
             else
             {
                 tmp2 = tmp2 -> next;
             }
         }
+        
+        // If we reach the last word in this hash "bucket"
         if (tmp2 -> next == NULL)
         {
+            // If the lengths of the words are the same, we check
             if  (strlen(tmp2 -> word) == strlen(programmer2))
             {
+                // If the words match, we're done checking the word
                 if ((strncmp(tmp2 -> word, programmer2, strlen(programmer2))) == 0)
                 {
                     spelled = true;
                 }
+                
+                /* If they do not match, we can conclude the word we're checking is spelled incorrectly, because there are no more words in this hash "bucket" to
+                check */
                 else
                 {
                     //printf("The word %s is spelled wrong.\n", programmer2);
                     spelled = false;
                 }
             }
+            
+            // If the lengths don't even match, we can conclude that the word we're checking is spelled incorrectly.
             else
             {
                 //printf("The word %s is spelled wrong.\n", programmer2);
@@ -251,19 +265,16 @@ bool check(const char *word)
             }
         }
     }
+    
+    // If the length of the word is more than 45 characters, we know it is spelled wrong.
     else
     {
         spelled = false;
     }
-    if (spelled == false)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    
+    return spelled;
 }
+
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
 unsigned int size(void)
 {
