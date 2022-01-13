@@ -80,6 +80,8 @@ unsigned int hash(const char *word)
         // Return the result of the calculation
         return 26*ASCII[0] + ASCII[1];
     }
+    
+    //If the word is only one letter long, simply multiply that letter's numerical value (1 to 26) by 26 to find its hash value.
     else
     {
         if (65 <= ((int) (programmer2[0])) && ((int) (programmer2[0])) <= 90)
@@ -92,9 +94,11 @@ unsigned int hash(const char *word)
     }
     printf("Hashed!\n");
 }
+
 // Loads dictionary into memory, returning true if successful else false
 bool load(const char *dictionary)
 {
+    // Ope
     FILE *ptr1 = fopen("large", "r");
     if (ptr1 == NULL)
     {
