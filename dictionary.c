@@ -7,18 +7,15 @@
 #include <unistd.h>
 #include "dictionary.h"
 
-// Represents a node in a hash table
-char wordyay[45];       // 
-char programmer2[45];
-int ASCII[2];
-int ASCII2[1];
-int k;
-bool spelled;
+char programmer2[45];    // Stores dictionary word for hashing
+int ASCII[2];            // Holds ASCII values of 1st characters of a word for hashing
+int ASCII2[1];           // Holds ASCIIO values of 1st character of word for hashing, if word is just one character long
+int k;                   // Counting variable
+bool spelled;            // Whether word is spelled correctly or not
 int a = 1;
-int j = 0;
+int j = 0;               // Will store number of words in dictionary
 
-/* Defining the data type "node" for our linked list. A linked list of composed of nodes, which contain both a String variable and a pointer to the next element
-in the linked list. */
+// Definined a node for our linked list. Contains a string and a a pointer to the next node
 typedef struct node
 {
     char word[LENGTH + 1];
@@ -29,37 +26,36 @@ node;
 // Number of buckets in hash table
 const unsigned int N = 676;
 
-// Hash table
+// Defining Hash table
 node *table[N];
 
-/* Hashing each word according to its first two characters. This hash function will be used on every word in the dictionary in order to organize the words and make 
-it more efficient to search through. This creates 676 total "buckets" into which words can be hashed. The word "cab", for example, would be hashed into to bucket 
-79. The letter "C" is represented by the number 3, and  the letter "A" is represented by the number 1. The number is calculated by taking the result of 26*3+1. */
+//////////////////////////////////////////////////////////
+///////////////////// Hash function //////////////////////
+//////////////////////////////////////////////////////////
 unsigned int hash(const char *word)
 {
-    strcpy(programmer2, word);
+    strcpy(programmer2, word);                                         // Store dictionary word in programmer2 variable
     ASCII[0] = 0;
     ASCII[1] = 0;
     ASCII2[0] = 0;
     if ((strlen(programmer2)) >= 2)
     {
-        // Making first two characters lowercase
         for (int epicly2 = 0; epicly2 < 2; epicly2++)
         {
             if (65 <= ((int) (programmer2[epicly2])) && ((int) (programmer2[epicly2])) <= 90)
             {
-                programmer2[epicly2] = programmer2[epicly2] + 32;
+                programmer2[epicly2] = programmer2[epicly2] + 32;      // Make first two characters of word lowercase
             }
         }
         
-        // If either are not lowercase, do nothing
+        
         if (97 < ((int) (programmer2[0])) || ((int) (programmer2[0])) > 122)
         {
-            return 0;
+            return 0;                                                  // If first character is lowercase, do nothing     
         }
         if (97 < ((int) (programmer2[1])) || ((int) (programmer2[1])) > 122)
         {
-            return 0;
+            return 0;                                                  // If second character is lowercase, do nothing
         }
         
         // Convert ASCII values of characters from numbers between 97 & 122 to numbers between 1 & 26
@@ -67,18 +63,17 @@ unsigned int hash(const char *word)
         {
             if (epicly == 0)
             {
-                char c = programmer2[epicly];
-                ASCII[epicly] = c - 97;
+                char c = programmer2[epicly];                          
+                ASCII[epicly] = c - 97;                                // ASCII values of a character are from 97 - 122, subtracting 97 makes it 0 - 25
             }
             else
             {
                 char c2 = programmer2[epicly];
-                ASCII[epicly] = c2 - 97;
+                ASCII[epicly] = c2 - 97;                               // Do the same with second character of word
             }
         }
            
-        // Return the result of the calculation
-        return 26*ASCII[0] + ASCII[1];
+        return 26*ASCII[0] + ASCII[1];                                 // Return the result of the calculation
     }
     
     //If the word is only one letter long, simply multiply that letter's numerical value (1 to 26) by 26 to find its hash value.
@@ -86,73 +81,73 @@ unsigned int hash(const char *word)
     {
         if (65 <= ((int) (programmer2[0])) && ((int) (programmer2[0])) <= 90)
         {
-            programmer2[0] = programmer2[0] + 32;
+            programmer2[0] = programmer2[0] + 32;                      // Make letter lowercase 
         }
         char c3 = programmer2[0];
-        ASCII2[0] = c3 - 97;
-        return 26*ASCII2[0];
+        ASCII2[0] = c3 - 97;                                           // Go from 0 - 25
+        return 26*ASCII2[0];                                           // Return result of calculation
     }
     printf("Hashed!\n");
 }
 
-// Loads dictionary into memory, returning true if successful else false
+//////////////////////////////////////////////////////////
+////////////// Loads dictionary into memory //////////////
+//////////////////////////////////////////////////////////
 bool load(const char *dictionary)
 {
-    // Opens file containing the dictionary, or the list of all English words which our program will check the words of the txt file against.
-    FILE *ptr1 = fopen("large", "r");
+    
+    FILE *ptr1 = fopen("large", "r");                                      // Opens file containing the dictionary
     if (ptr1 == NULL)
     {
         printf("The very first ptr is null.\n");
         return false;
     }
     
-    //Malloc enough memory for the first node
-    node *list = malloc(sizeof(node));
+    
+    node *list = malloc(sizeof(node));                                    // Malloc enough memory for the first node
     if (list == NULL)
     {
         printf("The very first malloc is null.\n");
         return false;
     }
     
-    // Set a char array to the first word of the dictionary
-    char wordyay2[45];
-    list -> next = NULL;
-    fscanf(ptr1, "%s", wordyay2);
     
-    // Basically counting the number of words in the dicionary and storing it in a variable called j
+    char wordyay2[45];                                                    // Set a char array to the first word of the dictionary
+    list -> next = NULL;
+    
+    
     while((feof(ptr1)) == 0)
     {
-        fscanf(ptr1, "%s", wordyay2);
-        j++;
+        j++;                                                              // Counting the number of words in the dicionary and storing it in a variable
     }
     
-    /* Creates an array of memory addresses, loads each word from the dictionary file into its own malloc, and stores the memory address to that allocated memory
-    in that array. */
-    node *arr[j];
-    rewind(ptr1);
-    for (k = 0; k < j; k++)
+    node *arr[j];                                                         // Array of size j which will store memory addresses
+    rewind(ptr1);                                                         // Set file reader back to beginning of file
+    
+    for (k = 0; k < j; k++)                                               // Loop through the dictionary
     {
-        node *b = malloc(sizeof(node));
+        node *b = malloc(sizeof(node));                                   // Malloc enough memory for a node
         if (b == NULL)
         {
             printf("We failed to load the word number %i from the dictionary.\n", k);
             return false;
         }
-        arr[k] = b;
-        fscanf(ptr1, "%s", wordyay2);
+        arr[k] = b;                                                       // Add b, a pointer to memory, to arr
+        fscanf(ptr1, "%s", wordyay2);                                     // Read through dictionary file and assign that word to "wordyay2"
         
-        // Assigning each word in the dictionary to one of the nodes
-        strcpy((arr[k] -> word), wordyay2);
-        arr[k] -> next = NULL;
+        
+        strcpy((arr[k] -> word), wordyay2);                               // Assigning the word of the dictionary we're on to one of the nodes of the linked list
+        arr[k] -> next = NULL; 
     }
-    list -> next = arr[0];
+    list -> next = arr[0];   
     k = 0;
     
-    // Create our hash table with 676 "buckets"
-    for (k = 0; k < N; k++)
+    
+    for (k = 0; k < N; k++)                                                 
     {
-        table[k] = malloc(sizeof(node));
+        table[k] = malloc(sizeof(node));                                  // Create our hash table with 676 "buckets"
     }
+    
     int as = 0;
     for (k = 0; k < j; k++)
     {
