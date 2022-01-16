@@ -145,31 +145,30 @@ bool load(const char *dictionary)
     
     for (k = 0; k < N; k++)                                                 
     {
-        table[k] = malloc(sizeof(node));                                  // Create our hash table with 676 "buckets"
+        table[k] = malloc(sizeof(node));                                 // Create our hash table with 676 "buckets"
     }
     
-    int as = 0;
     for (k = 0; k < j; k++)
     {
-        // Hash each word in the dictionary
-        unsigned int epic = hash(arr[k] -> word);
+      
+        unsigned int epic = hash(arr[k] -> word);                        // Hash each word in the dictionary
         
-        // If this is the first word in this hash "bucket", make the pointer in the hash table point to this word
+        // If this is the 1st word in this hash bucket
         if ((table[epic] -> next) == NULL)
         {
-            table[epic] -> next = arr[k];
+            table[epic] -> next = arr[k];                                // Make the pointer in the hash table point to this word
         }
         
-        // If not, follow the linked list for that hash "bucket" until you reach its end, at which point add the new word and make the previous pointer point to it
+        // If this hash bucket already has at least one word
         else
         {
-            node *tmp = table[epic];
-            while (tmp -> next != NULL)
+            node *tmp = table[epic];                                     // Define a temporary pointer which we will use to travel down the linked list
+            while (tmp -> next != NULL)                                  
             {
-                tmp = tmp -> next;
-                if (tmp -> next == NULL)
+                tmp = tmp -> next;                                       // Follow the linked list for this hash bucket
+                if (tmp -> next == NULL)                                 // If we reach the end of the list
                 {
-                    tmp -> next = arr[k];
+                    tmp -> next = arr[k];                                // Add the word to the end of the list 
                     printf("Word #%i + loaded from dictionary!\n", k);
                     break;
                 }
@@ -180,10 +179,13 @@ bool load(const char *dictionary)
     return true;
 }
 
+//////////////////////////////////////////////////////////
+/////////////// Actually spell check words ///////////////
+//////////////////////////////////////////////////////////
 bool check(const char *word)
 {
-    // Hash the word we are trying to spell check
-    unsigned int programmer = hash(word);
+    // Hash the word we are trying to spell check. This way, we only check the word against dictionary words with this hash value to increase efficiency
+    unsigned int programmer = hash(word);  
     
     // Access the hash "bucket" which this word would have belonged to
     node *tmp2 = table[programmer];
@@ -270,29 +272,33 @@ bool check(const char *word)
     return spelled;
 }
 
-// Returns number of words in dictionary if loaded else 0 if not yet loaded
+//////////////////////////////////////////////////////////
+////////// Returns number of words in dictionary /////////
+//////////////////////////////////////////////////////////
 unsigned int size(void)
 {
     int *ip;
-    ip = &j;
-    return *ip;
+    ip = &j;       // Sets integer pointer address equal to address of j variable
+    return *ip;    // Return integer pointer
 }
 
-// Unloads dictionary from memory, returning true if successful else false
+//////////////////////////////////////////////////////////
+///////////// Unloads dictionary from memoery ////////////
+//////////////////////////////////////////////////////////
 bool unload(void)
 {
-    node *cursor = table[0] -> next;
-    node *tmp4;
-    for (int end = 0; end < N; end++)
+    node *cursor = table[0] -> next;               // Temporary pointer called cursor, set to point to first word in first hash bucket       
+    node *tmp4;                      
+    for (int end = 0; end < N; end++)              // Loop through each bucket in hash table
     {
-        while (cursor -> next != NULL)
+        while (cursor -> next != NULL)             // Loop through linked list for this hash bucket
         {
-            tmp4 = cursor;
+            tmp4 = cursor;                         // Set temporary pointer to same address as cursor            
+            free(tmp4);                            // Free memory allocated by cursor pointer
             cursor = cursor -> next;
-            free(tmp4);
-            if (cursor -> next == NULL)
+            if (cursor -> next == NULL)            // If end of linked list for this hash bucket is reached, break from while loop
             {
-                break;
+                break;                           
             }
         }
     }
