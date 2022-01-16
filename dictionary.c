@@ -8,7 +8,7 @@
 #include "dictionary.h"
 
 // Represents a node in a hash table
-char wordyay[45];
+char wordyay[45];       // 
 char programmer2[45];
 int ASCII[2];
 int ASCII2[1];
@@ -51,6 +51,8 @@ unsigned int hash(const char *word)
                 programmer2[epicly2] = programmer2[epicly2] + 32;
             }
         }
+        
+        // If either are not lowercase, do nothing
         if (97 < ((int) (programmer2[0])) || ((int) (programmer2[0])) > 122)
         {
             return 0;
