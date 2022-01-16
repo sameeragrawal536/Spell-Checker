@@ -8,8 +8,6 @@
 #include "dictionary.h"
 
 // Represents a node in a hash table
-char wordly[4];
-char wordly2[2];
 char wordyay[45];
 char programmer2[45];
 int ASCII[2];
